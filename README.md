@@ -33,7 +33,7 @@ const double END_TIME = 315*beat_per_second;//最后一个键按下时间的后�
 而这样的 `pattern1.txt` 是不合法的：
 
 ```
-4
+5
 3 1212
 4 1221
 4 2334
@@ -44,6 +44,12 @@ const double END_TIME = 315*beat_per_second;//最后一个键按下时间的后�
 在这个不合法例子中，第一个 pattern 长度不匹配，第二个出现反手，第三个触及最左轨为 $2$，第四个触及最右轨超过 $4$，第五个右手起。
 
 运行后生成的是 `2.aff` 文件，可以在 Arcade 预览。
+
+## Checker
+
+有一个 `checker.cpp`，编译运行用于在 `generator.cpp` 的调试模式下检测谱面有无反手、五纵，并输出谱面的总位移量。使用时与 `2.aff` 放在同一目录下。
+
+`generator.cpp` 的调试模式 `PrintNotes(0);`，输出生成结果也是 `2.aff`。
 
 ## 半成品
 
