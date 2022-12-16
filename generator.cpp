@@ -3,10 +3,10 @@
 using namespace std;
 
 
-const double bpm = 178.00;//曲目BPM
+const double bpm = 150.00;//曲目BPM
 const double beat_per_second = 60.00/bpm;
 const double START_TIME = 4*beat_per_second;//第一个键按下时间
-const double END_TIME = 315*beat_per_second;//最后一个键按下时间的后一个十六分音符的时间
+const double END_TIME = 384*beat_per_second;//最后一个键按下时间的后一个十六分音符的时间
 
 
 mt19937 rnd(time(0));
@@ -16,7 +16,7 @@ struct node{
     int len,tracks;
 }patterns[105];
 int change_time_int(double x){
-    return (int)(1000*x);
+    return (int)(1000.0*x+0.5);
 }
 int mirror_mode(int num,int tracks){
     int track[10];
@@ -159,7 +159,7 @@ pair<int,int> get_pattern(int last_track){
     return make_pair(patterns[roll_num].len,tmp_pattern);
 }
 //去除四纵、五纵
-void go_delta(){
+void go_delta_ground(){
     for(int i = 1;i+3<=num_of_notes;++i){
         if(i&1){
             if(notes[i].track != 4 && notes[i].track == notes[i+1].track && notes[i].track == notes[i+2].track && notes[i].track == notes[i+3].track){
@@ -179,12 +179,26 @@ void go_delta(){
             }
         }
     }
+    for(int i = 1;i+2 <= num_of_notes;++i){
+        if(i&1){
+            if(notes[i].track == notes[i+1].track && notes[i].track == notes[i+2].track){
+                if(notes[i+2].track != 1) notes[i+2].track = notes[i].track-1;
+                else notes[i+1].track = notes[i].track+1;
+            }
+        }else{
+            if(notes[i].track == notes[i+1].track && notes[i].track == notes[i+2].track){
+                if(notes[i+2].track != 4) notes[i+2].track = notes[i].track+1;
+                else notes[i+1].track = notes[i].track-1;
+            }
+        }
+    }
 }
 //地键上天
 void go_sky(){
-    for(int i = 2;i<=num_of_notes;++i){
+    for(int i = 3;i<=num_of_notes;++i){
+        if(notes[i-1].sky != 0 && notes[i-2].sky != 0) continue;
         if(i&1){
-            if(rnd()%5 <= 1){//sky
+            if(rnd()%10 <= 2){//sky
                 if(notes[i-1].sky == 0){
                     int rborder = 3;
                     if(notes[i-1].track == 1) rborder = 2;
@@ -195,7 +209,7 @@ void go_sky(){
                 }
             }
         }else{
-            if(rnd()%5 <= 1){
+            if(rnd()%10 <= 2){
                 if(notes[i-1].sky == 0){
                     int lborder = 1;
                     if(notes[i-1].track == 4) lborder = 2;
@@ -236,6 +250,9 @@ void PrintNotes(int opt){
             }
         }
     }
+}
+void RestAWhile(){
+
 }
 int main(){
     freopen("pattern1.txt","r",stdin);
@@ -278,7 +295,7 @@ int main(){
     int COUNTTIMES = 0;
     while(TMP < END_TIME) TMP += beat_per_second/(0.25*16),COUNTTIMES++;
     random_jh(local_time,COUNTTIMES,16,lst_track,true);
-    go_delta();
+    go_delta_ground();
     go_sky();
     AddNotesToSky();
     PrintNotes(1);
