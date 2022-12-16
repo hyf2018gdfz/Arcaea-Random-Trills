@@ -26,12 +26,21 @@ int main(){
 	else printf("NO:%d\n",wh);
 
 	flg = false;
-	for(int i = 1;i+4<=n;++i){
-		if(notes[i].track == notes[i+1].track && notes[i].track == notes[i+2].track && notes[i].track == notes[i+3].track && notes[i].track == notes[i+4].track) flg = true;
+	for(int i = 1;i+2<=n;++i){
+		if(notes[i].track == notes[i+1].track && notes[i].track == notes[i+2].track) flg = true;
 	}
-	printf("是否有五纵：");
+	printf("是否有三纵：");
 	if(flg) puts("YES");
 	else puts("NO");
+
+	flg = false;
+	for(int i = 1;i+2<=n;++i){
+		if(notes[i].sky == notes[i+1].sky && notes[i].sky == notes[i+2].sky && notes[i].sky) flg = true;
+	}
+	printf("是否有sky三纵：");
+	if(flg) puts("YES");
+	else puts("NO");
+
 	flg = false;
 	wh = 0;
 	for(int i = 2;i<=n;++i){
@@ -49,7 +58,7 @@ int main(){
 
 	int sum = 0;
 	for(int i = 1;i+1<=n;++i){
-		if(notes[i].track == notes[i+1].track) sum++;
+		if((notes[i].track == notes[i+1].track && notes[i].sky == 0 && notes[i+1].sky == 0) || (notes[i].sky == notes[i+1].sky && notes[i].sky != 0 && notes[i+1].sky != 0)) sum++;
 	}
 	printf("sum of notes:%d\nsum of chai:%d\n",n,sum);
 	int score = 0;
